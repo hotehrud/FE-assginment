@@ -85,6 +85,14 @@ export default {
     }
   },
   watch: {
+    list(v) {
+      // called only once && for default-true
+      if (Array.isArray(v) && v.length > 0) {
+        v.forEach(item => {
+          this.selector.push(item.name);
+        });
+      }
+    },
     isOpened(v) {
       if (v) {
         this.hasError = false;
