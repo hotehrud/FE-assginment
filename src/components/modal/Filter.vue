@@ -77,6 +77,7 @@ export default {
       }
 
       this.$emit("statusSelector", this.selector.map(v => this.indexStore[v]));
+      this.isOpened = false;
     },
     isValid() {
       const container = this.$el.querySelector(".filter-container");
