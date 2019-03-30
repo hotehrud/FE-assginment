@@ -8,7 +8,7 @@
       <div class="filter-box">
         <h4>카테고리</h4>
         <ul>
-          <li v-for="(item, index) in list" :key="index" class="control">
+          <li v-for="(item, index) of list" :key="index" class="control">
             <input
               type="checkbox"
               name="selector"
@@ -53,6 +53,9 @@ export default {
       errors: {}
     };
   },
+  created() {
+    this.indexStore = {};
+  },
   computed: {
     errorMessage() {
       return this.errors.toString();
@@ -69,7 +72,11 @@ export default {
     },
     save() {
       this.prevSelectorData = this.selector.slice(0);
-      this.isValid();
+      if (!this.isValid()) {
+        return;
+      }
+
+      this.$emit("statusSelector", this.selector.map(v => this.indexStore[v]));
     },
     isValid() {
       const container = this.$el.querySelector(".filter-container");
@@ -89,6 +96,7 @@ export default {
       // called only once && for default-true
       if (Array.isArray(v) && v.length > 0) {
         v.forEach(item => {
+          this.indexStore[item.name] = item.no;
           this.selector.push(item.name);
         });
       }
@@ -203,7 +211,7 @@ export default {
   }
 
   .error-text {
-    color: blue;
+    color: red;
   }
 }
 </style>
