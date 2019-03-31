@@ -16,6 +16,8 @@
           :category="filterData"
           :info="item"
           :class="{ad: item.kind === 'ad'}"
+          :data-post-no="item.no"
+          class="post"
         />
       </div>
     </section>
@@ -266,6 +268,36 @@ export default {
       z-index: 9;
     }
   }
+  .list-container {
+    .post {
+      border-radius: 2px;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.21);
+      transition: all 1s ease; /* Standard */
+      &:hover {
+        top: -10px;
+        -webkit-border-bottom-left-radius: 70px 20px; /* WebKit */
+        -moz-border-bottom-left-radius: 70px 20px; /* Firefox */
+        -o-border-bottom-left-radius: 70px 20px; /* Opera */
+        border-bottom-left-radius: 70px 20px; /* Standard */
+        -webkit-box-shadow: -10px 10px 35px #888; /* WebKit */
+        -moz-box-shadow: -10px 10px 35px #888; /* Firefox */
+        -o-box-shadow: -10px 10px 35px #888; /* Opera */
+        box-shadow: -10px 10px 35px #888; /* Standard */
+      }
+      margin-bottom: 20px;
+      > div {
+        padding: 25px 20px;
+      }
+    }
+  }
+  .by-author {
+    color: #03658c;
+  }
+
+  .date {
+    color: #999;
+  }
+
   .active {
     color: red;
   }
@@ -277,6 +309,7 @@ export default {
     top: 0;
     max-width: 1140px;
     width: 100%;
+    z-index: 9;
   }
 }
 </style>

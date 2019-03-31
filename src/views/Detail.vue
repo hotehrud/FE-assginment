@@ -84,8 +84,8 @@ export default {
 .detail-container {
   margin: 0 auto;
   max-width: 740px;
+  min-height: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
   background-color: #fff;
@@ -116,7 +116,6 @@ export default {
     .reply-head {
       background: #fcfcfc;
       border-bottom: 1px solid #e5e5e5;
-      overflow: hidden;
       border-radius: 4px 4px 0 0;
     }
 
@@ -128,13 +127,5 @@ export default {
       border-radius: 0 0 4px 4px;
     }
   }
-}
-
-.by-author {
-  color: #03658c;
-}
-
-.date {
-  color: #999;
 }
 </style>
