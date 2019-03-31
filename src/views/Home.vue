@@ -110,7 +110,7 @@ export default {
       }
     },
     getCategory() {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         // Get, Category
         this.$http.get(`${BASE_URI}/${CATEGORY_PATH}`).then(result => {
           const data = result.data;
@@ -118,13 +118,15 @@ export default {
 
           if (code === 200) {
             this.filterData = data.list;
+            resolve();
+          } else {
+            reject(data);
           }
-          resolve();
         });
       });
     },
     getPostList() {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         // Get, Posts
         let url = `${BASE_URI}/${POSTS_PATH}?`;
 
@@ -147,14 +149,15 @@ export default {
               this.postParams.next = false;
             }
             ++this.postParams.page;
+            resolve();
+          } else {
+            reject(data);
           }
-          resolve();
         });
       });
     },
     getAdList() {
-      return new Promise(resolve => {
-        console.log("getAdList");
+      return new Promise((resolve, reject) => {
         // Get, Ads
         let url = `${BASE_URI}/${AD_PATH}?`;
 
@@ -177,8 +180,10 @@ export default {
               this.adParams.next = false;
             }
             ++this.adParams.page;
+            resolve();
+          } else {
+            reject(data);
           }
-          resolve();
         });
       });
     },
@@ -197,8 +202,10 @@ export default {
     order(v) {
       this.postParams.ord = v;
     },
-    enterDetailPage({ id }) {
-      console.log("!@");
+    enterDetailPage({ id, kind }) {
+      if (kind === "ad") {
+        return;
+      }
       this.$router.push({
         name: "detail",
         query: {
@@ -263,7 +270,11 @@ export default {
     }
     .sort-box {
       span {
+        cursor: pointer;
         margin: 10px;
+        &:hover {
+          font-weight: bold;
+        }
       }
     }
   }

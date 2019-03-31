@@ -1,6 +1,9 @@
 <template>
   <div class="detail-container">
-    <div v-if="!article" class="container">
+    <div
+      v-if="!article"
+      class="position-fixed w-100 h-100 d-flex justify-content-center align-items-center"
+    >
       <b-spinner label="Loading..."></b-spinner>
     </div>
     <div
@@ -46,6 +49,7 @@
 
 <script>
 import { BASE_URI, DETAIL_PATH } from "@/config/api";
+import { setTimeout } from "timers";
 
 export default {
   props: {
@@ -55,7 +59,7 @@ export default {
   },
   data() {
     return {
-      article: {},
+      article: null,
       replies: null
     };
   },

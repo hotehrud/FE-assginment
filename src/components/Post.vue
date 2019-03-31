@@ -39,7 +39,8 @@ export default {
       userId: this.info.user_no,
       email: this.info.email,
       date: this.info.updated_at,
-      categoryId: this.info.category_no
+      categoryId: this.info.category_no,
+      kind: this.info.kind
     };
   },
   computed: {
@@ -53,7 +54,8 @@ export default {
   methods: {
     enter() {
       this.$emit("clickEvent", {
-        id: this.postId
+        id: this.postId,
+        kind: this.kind
       });
     }
   }
