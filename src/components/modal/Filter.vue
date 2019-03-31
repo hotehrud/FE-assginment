@@ -71,10 +71,10 @@ export default {
       this.isOpened = status;
     },
     save() {
-      this.prevSelectorData = this.selector.slice(0);
       if (!this.isValid()) {
         return;
       }
+      this.prevSelectorData = this.selector.slice(0);
 
       this.$emit("statusSelector", this.selector.map(v => this.indexStore[v]));
       this.isOpened = false;
