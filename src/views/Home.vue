@@ -10,10 +10,11 @@
     <section v-scroll="loadMore">
       <div class="list-container">
         <post
-          v-for="(item,index) of posts"
+          v-for="(item,index) of postsWithAds"
           :key="index + '-' + item.no"
           :category="filterData"
           :info="item"
+          :class="{ad: item.kind === 'ad'}"
         />
       </div>
     </section>
@@ -24,7 +25,8 @@
 import scroll from "@/directives/scroll";
 import Post from "@/components/Post.vue";
 import FilterModal from "@/components/modal/Filter.vue";
-import { BASE_URI, CATEGORY_PATH, POSTS_PATH } from "@/config/constant";
+import { AD_CYCLE, AD_LIMIT, POST_LIMIT } from "@/config/constant";
+import { BASE_URI, CATEGORY_PATH, POSTS_PATH, AD_PATH } from "@/config/api";
 
 export default {
   directives: {
@@ -38,16 +40,46 @@ export default {
     return {
       filterData: null,
       posts: [],
+      ads: [],
       postParams: {
         page: 1,
         ord: "asc",
-        category: [1, 2, 3]
+        category: [1, 2, 3],
+        limit: POST_LIMIT,
+        next: true
       }
     };
   },
   async created() {
-    await this.getCategory();
+    this.adParams = {
+      page: 1,
+      limit: AD_LIMIT,
+      next: true
+    };
+
+    const promises = [this.getCategory(), this.getAdList()];
+    await Promise.all(promises);
     await this.getPostList();
+  },
+  computed: {
+    postsWithAds() {
+      const merge = [];
+      let i = 0;
+      let adIndex = 0;
+      let adCycle = AD_CYCLE;
+      for (const item of this.posts) {
+        merge.push(item);
+
+        if ((i % adCycle) + 1 === adCycle) {
+          if (adIndex < this.ads.length) {
+            this.ads[adIndex].kind = "ad";
+            merge.push(this.ads[adIndex++]);
+          }
+        }
+        i++;
+      }
+      return merge;
+    }
   },
   methods: {
     updateCategory(v) {
@@ -93,14 +125,57 @@ export default {
             for (let item of data.list) {
               this.posts.push(item);
             }
+            // check, next api exist
+            if (data.list.length < this.postParams.limit) {
+              this.postParams.next = false;
+            }
             ++this.postParams.page;
           }
           resolve();
         });
       });
     },
+    getAdList() {
+      return new Promise(resolve => {
+        console.log("getAdList");
+        // Get, Ads
+        let url = `${BASE_URI}/${AD_PATH}?`;
+
+        for (let key in this.adParams) {
+          let value = this.adParams[key];
+          value = Array.isArray(value) ? value.join(",") : value;
+          url += `&${key}=${value}`;
+        }
+
+        this.$http.get(url).then(result => {
+          const data = result.data;
+          const code = data.code;
+
+          if (code === 200) {
+            for (let item of data.list) {
+              this.ads.push(item);
+            }
+            // check, next api exist
+            if (data.list.length < this.adParams.limit) {
+              this.adParams.next = false;
+            }
+            ++this.adParams.page;
+          }
+          resolve();
+        });
+      });
+    },
     async loadMore() {
-      await this.getPostList();
+      if (this.postParams.next) {
+        await this.getPostList();
+        // need additional ad
+        const possible = this.posts.length / AD_CYCLE;
+        if (possible >= this.ads.length) {
+          if (this.adParams.next) {
+            this.getAdList();
+          }
+        }
+      }
     },
     order(v) {
       this.postParams.ord = v;
@@ -171,6 +246,9 @@ export default {
     }
   }
   .active {
+    color: red;
+  }
+  .ad {
     color: red;
   }
 }

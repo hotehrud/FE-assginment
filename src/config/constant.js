@@ -1,7 +1,7 @@
 const obj = {
-  BASE_URI: "http://comento.cafe24.com/",
-  CATEGORY_PATH: "category.php",
-  POSTS_PATH: "request.php"
+  AD_CYCLE: 4,
+  AD_LIMIT: 10,
+  POST_LIMIT: 10
 };
 
-export const { BASE_URI, CATEGORY_PATH, POSTS_PATH } = obj;
+export const { AD_CYCLE, POST_LIMIT, AD_LIMIT } = obj;
