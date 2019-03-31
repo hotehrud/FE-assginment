@@ -1,12 +1,13 @@
 <template>
   <div @click="enter" class="post-container">
     <div class="post-box">
-      <div class="post-head px-4 py-2">
+      <slot name="image"/>
+      <div v-if="cagetoryName && categoryId" class="post-head px-4 py-2">
         <span>{{cagetoryName}}</span>
         <span>{{categoryId}}</span>
       </div>
       <div class="post-content pt-4">
-        <div class="content-head px-4">
+        <div v-if="email && date" class="content-head px-4">
           <span class="by-author">{{email}}</span>
           <span>|</span>
           <span class="date">{{date}}</span>
@@ -66,6 +67,9 @@ export default {
   position: relative;
   cursor: pointer;
   .post-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     .post-head {
       display: flex;
       justify-content: space-between;

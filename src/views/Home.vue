@@ -18,7 +18,12 @@
           :class="{ad: item.kind === 'ad'}"
           :data-post-no="item.no"
           class="post"
-        />
+        >
+          <div v-if="item.kind === 'ad'" slot="image" class="ad-box">
+            <p>Sponsored</p>
+            <img :src="item.imagePath">
+          </div>
+        </post>
       </div>
     </section>
   </div>
@@ -29,7 +34,13 @@ import scroll from "@/directives/scroll";
 import Post from "@/components/Post.vue";
 import FilterModal from "@/components/modal/Filter.vue";
 import { AD_CYCLE, AD_LIMIT, POST_LIMIT } from "@/config/constant";
-import { BASE_URI, CATEGORY_PATH, POSTS_PATH, AD_PATH } from "@/config/api";
+import {
+  BASE_URI,
+  CATEGORY_PATH,
+  POSTS_PATH,
+  AD_PATH,
+  IMAGE_PATH
+} from "@/config/api";
 
 export default {
   directives: {
@@ -76,6 +87,9 @@ export default {
         if ((i % adCycle) + 1 === adCycle) {
           if (adIndex < this.ads.length) {
             this.ads[adIndex].kind = "ad";
+            this.ads[adIndex].imagePath = `${BASE_URI}${IMAGE_PATH}/${
+              this.ads[adIndex].img
+            }`;
             merge.push(this.ads[adIndex++]);
           }
         }
@@ -289,6 +303,36 @@ export default {
         padding: 25px 20px;
       }
     }
+    .ad {
+      .post-box {
+        flex-direction: row;
+        @media @phone-down {
+          flex-direction: column;
+        }
+        > div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .ad-box {
+          flex-direction: column;
+          flex-basis: 40%;
+          @media @phone-down {
+            flex-basis: 100%;
+          }
+          img {
+            position: relative;
+            width: 100%;
+          }
+        }
+        .post-content {
+          flex-basis: 60%;
+          @media @phone-down {
+            flex-basis: 100%;
+          }
+        }
+      }
+    }
   }
   .by-author {
     color: #03658c;
@@ -301,9 +345,7 @@ export default {
   .active {
     color: red;
   }
-  .ad {
-    color: red;
-  }
+
   .sticky {
     position: fixed;
     top: 0;
