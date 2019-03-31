@@ -1,5 +1,5 @@
 <template>
-  <div class="post-container">
+  <div @click="enter" class="post-container">
     <div class="post-header">
       <span>{{email}}</span>
       <span>{{postId}}</span>
@@ -48,6 +48,13 @@ export default {
     cagetoryName() {
       return this.category.find({ no: this.categoryId });
     }
+  },
+  methods: {
+    enter() {
+      this.$emit("clickEvent", {
+        id: this.postId
+      });
+    }
   }
 };
 </script>
@@ -55,5 +62,6 @@ export default {
 <style scoped lang="less">
 .post-container {
   border: 1px solid #000;
+  cursor: pointer;
 }
 </style>

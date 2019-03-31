@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <nav>
+  <div class="main-container">
+    <nav class="sticky">
       <filter-modal v-on:statusSelector="updateCategory" :list="filterData" class="filter-voc"/>
       <div class="sort-box">
         <span @click="order('asc')" :class="{active: postParams.ord === 'asc'}">오름차순</span>
@@ -10,7 +10,8 @@
     <section v-scroll="loadMore">
       <div class="list-container">
         <post
-          v-for="(item,index) of postsWithAds"
+          v-on:clickEvent="enterDetailPage"
+          v-for="(item, index) of postsWithAds"
           :key="index + '-' + item.no"
           :category="filterData"
           :info="item"
@@ -179,6 +180,15 @@ export default {
     },
     order(v) {
       this.postParams.ord = v;
+    },
+    enterDetailPage({ id }) {
+      console.log("!@");
+      this.$router.push({
+        name: "detail",
+        query: {
+          id: id
+        }
+      });
     }
   },
   watch: {
@@ -212,15 +222,26 @@ export default {
 </script>
 
 <style lang="less">
-.container {
+@import "../less/variables.less";
+
+.main-container {
   position: relative;
+  max-width: 1140px;
   width: 100%;
-  height: 100%;
+  margin: 0 auto;
   background-color: #fff;
+  @media @phone-down {
+    max-width: 450px;
+  }
   nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    + section {
+      padding-top: 70px;
+      padding: 70px 20px 0 20px;
+    }
     > div {
       margin: 10px 20px;
     }
@@ -250,6 +271,12 @@ export default {
   }
   .ad {
     color: red;
+  }
+  .sticky {
+    position: fixed;
+    top: 0;
+    max-width: 1140px;
+    width: 100%;
   }
 }
 </style>
